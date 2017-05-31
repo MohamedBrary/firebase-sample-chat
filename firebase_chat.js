@@ -26,13 +26,13 @@ initFirebase = function() {
 
 /** Function to add a data listener **/
 startListening = function() {
-  firebase.database().ref().on('child_added', function(snapshot) {
+  firebase.database().ref('messages').on('child_added', function(snapshot) {
     var chatItem = snapshot.val();
     
     if ( chatItem.from == 'Designer' )
-      renderDesignerMsg(chatItem.msg)
+      renderDesignerMsg(chatItem.msg, chatItem.timestamp)
     else
-      renderDeveloperMsg(chatItem.msg)    
+      renderDeveloperMsg(chatItem.msg, chatItem.timestamp)
   });
 }
 
@@ -50,11 +50,14 @@ initChatApp = function() {
     var fromUser = usernameInput.text().trim();
     var toUser = othernameInput.text().trim();
     var msgText = textInput.val().trim();
-    
-    firebase.database().ref().push({
+    var timestamp = new Date().toString();
+    var timestampFormatted = timestamp.substring(0, timestamp.lastIndexOf(":"))
+
+    firebase.database().ref('messages').push({
       from: fromUser,
       to: toUser,
-      msg: msgText
+      msg: msgText,
+      timestamp: timestampFormatted
     });
 
     textInput.val('');
@@ -85,15 +88,15 @@ function toggleUser() {
 
 }
 
-function renderDesignerMsg(text){
-  return renderMsg('', 'https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg', text);
+function renderDesignerMsg(text, timestamp){
+  return renderMsg('', 'https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg', text, timestamp);
 }
 
-function renderDeveloperMsg(text){
-  return renderMsg('other-msg admin_chat', 'https://scontent-cai1-1.xx.fbcdn.net/v/t1.0-1/c22.0.48.48/p48x48/13615419_10153592621422793_8368169177989329233_n.jpg?oh=f5ef37717a144053fcdf7e6fbd42ff02&oe=59E439CE', text);  
+function renderDeveloperMsg(text, timestamp){
+  return renderMsg('other-msg admin_chat', 'https://scontent-cai1-1.xx.fbcdn.net/v/t1.0-1/c22.0.48.48/p48x48/13615419_10153592621422793_8368169177989329233_n.jpg?oh=f5ef37717a144053fcdf7e6fbd42ff02&oe=59E439CE', text, timestamp);  
 }
 
-function renderMsg(className, imgSrc, text){
+function renderMsg(className, imgSrc, text, timestamp){
   imgClass = className != '' ? 'right' : 'left';
   timeClass = className == '' ? 'left' : 'right';
   chatItemHtml = `
@@ -104,7 +107,7 @@ function renderMsg(className, imgSrc, text){
       <div class="chat-body1 clearfix">
         <p>${text}</p>
         <div class="text-muted small chat_time pull-${timeClass}">
-          09:40PM
+          ${timestamp}
         </div>
       </div>
     </li>
