@@ -119,7 +119,7 @@
 }
 
 .member_list {
-    height: 414px;
+    height: 422px;
     overflow-x: hidden;
     overflow-y: auto;
     border: #dedede;
@@ -128,7 +128,7 @@
 }
 
 .attachment_list .member_list {
-    min-height: 467px;
+    min-height: 475px;
 }
 
 .sub_menu_ {
@@ -246,8 +246,8 @@
 }
 
 .app-header{
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     color: grey;
 }
 
