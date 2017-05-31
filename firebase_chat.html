@@ -22,14 +22,14 @@
     <div class="main_section">
       <div class="container">
         <div class="app-header">
-          <p class="lead">
+          <span class="lead">
             Chat between Designer and Developer of this sample app.
-          </p>
-          <button class="btn btn-primary disabled">
+          </span>
+          <button class="dev-switch-button btn btn-primary disabled">
             <img alt="Developer Avatar" class="img-circle" src="https://scontent-cai1-1.xx.fbcdn.net/v/t1.0-1/c22.0.48.48/p48x48/13615419_10153592621422793_8368169177989329233_n.jpg?oh=f5ef37717a144053fcdf7e6fbd42ff02&oe=59E439CE"/>
             Chat as Developer
           </button>
-          <button class="btn btn-default">
+          <button class="dev-switch-button btn btn-default">
             <img alt="Designer Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
             Chat as Designer
           </button>
@@ -197,39 +197,12 @@
               </div>
               <!--new_message_head-->
               <div class="chat_area">
-                <ul class="list-unstyled">
-                  <li class="left clearfix">
-                    <span class="chat-img1 pull-left">
-                      <img alt="User Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
-                    </span>
-                    <div class="chat-body1 clearfix">
-                      <p>
-                        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.
-                      </p>
-                      <div class="chat_time pull-right">
-                        09:40PM
-                      </div>
-                    </div>
-                  </li>
-                  <li class="other-msg left clearfix admin_chat">
-                    <span class="chat-img1 pull-right">
-                      <img alt="User Avatar" class="img-circle" src="https://scontent-cai1-1.xx.fbcdn.net/v/t1.0-1/c22.0.48.48/p48x48/13615419_10153592621422793_8368169177989329233_n.jpg?oh=f5ef37717a144053fcdf7e6fbd42ff02&oe=59E439CE"/>
-                    </span>
-                    <div class="chat-body1 clearfix">
-                      <p>
-                        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.
-                      </p>
-                      <div class="chat_time pull-left">
-                        09:42PM
-                      </div>
-                    </div>
-                  </li>
+                <ul id="chat_items_list" class="list-unstyled">
                 </ul>
               </div>
               <!--chat_area-->
               <div class="message_write">
-                <textarea id="chat_text" class="form-control" placeholder="type a message">
-                </textarea>
+                <textarea id="chat_text" class="form-control" placeholder="type a message"></textarea>
                 <div class="clearfix">
                 </div>
                 <div class="chat_bottom">
