@@ -244,3 +244,14 @@
     color: #fff;
     cursor: pointer;
 }
+
+.app-header{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: grey;
+}
+
+.app-header img {
+    height: 34px;
+    width: 34px;
+}
