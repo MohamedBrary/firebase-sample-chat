@@ -1,7 +1,7 @@
 var firebaseWrapper = (function() {
   var publicScope = {};
 
-  // Firebase Global variables TODO: use namespace
+  // Firebase Global variables
   var messagesDbRef;
   var messagesAttachmentsDbRef;
   var messagesAttachmentsRef;
