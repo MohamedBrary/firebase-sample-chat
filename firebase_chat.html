@@ -12,6 +12,8 @@
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
     </script>    
+    <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js">
+    </script>    
     <link href="firebase_chat.css" rel="stylesheet"/>
     <link href="https://www.fusionaryhub.com/favicon.ico" rel="shortcut icon" type="image/png"/>
     <link href="favicon.ico" rel="shortcut icon" type="image/png"/>
@@ -111,7 +113,7 @@
           </div>
           <!--conversations chat_sidebar-->
           <!--chat-->
-          <div class="col-sm-6 message_section">
+          <div id="chat_column" class="col-sm-6 message_section">
             <div class="row">
               <div class="new_message_head">
                 <div class="pull-left">
@@ -199,6 +201,8 @@
       </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js">
+    </script>
+    <script src="firebase_wrapper.js">
     </script>
     <script src="firebase_chat.js">
     </script>

@@ -14,174 +14,24 @@ var messagesPerConversation;
 var conversationTimestamp;
 var newMessage;
 
-// Firebase Global variables TODO: use namespace
-var messagesDbRef;
-var messagesAttachmentsDbRef;
-var messagesAttachmentsRef;
-
 $( window ).on( "load", function() {
+  $("#chat_column").LoadingOverlay("show");
+
   // Initialize Firebase
-  initFirebase();
+  firebaseWrapper.initFirebase();
+
+  // Get conversations data
+  firebaseWrapper.initConversationData(renderConversation);
+
+  // Begin listening for data
+  firebaseWrapper.startListeningToChatMessages(renderChatItem);
+  firebaseWrapper.startListeningToAttachments(renderAttachmentItem);
 
   // Initialize our chat app
   initChatApp();
+
+  $("#chat_column").LoadingOverlay("hide");  
 });
-
-/** Function to init Firebase **/
-initFirebase = function() {
-  var config = {
-    apiKey: "AIzaSyCLeU7v5DxQiOBqXDKM28D3UZZsXCVqYJY",
-    authDomain: "fir-sample-chat-94755.firebaseapp.com",
-    databaseURL: "https://fir-sample-chat-94755.firebaseio.com",
-    projectId: "fir-sample-chat-94755",
-    storageBucket: "fir-sample-chat-94755.appspot.com",
-    messagingSenderId: "938343873148"
-  };
-
-  firebase.initializeApp(config);
-
-  // Setting the global database and storage references  
-  messagesDbRef = firebase.database().ref('messages');
-  messagesAttachmentsDbRef = firebase.database().ref('attachments');
-  messagesAttachmentsRef = firebase.storage().ref('attachments/');
-
-  // Get conversations data
-  initConversationData();
-
-  // Begin listening for data
-  startListening();
-}
-
-/** Function to retrieve conversations data **/
-initConversationData = function() {
-  messagesDbRef.once("value").then(function(snapshot) {    
-    messagesPerConversation = snapshot.numChildren();
-    updateConversationMessageCount();
-    conversationTimestamp = snapshot.val()[Object.keys(snapshot.val())[messagesPerConversation-1]].timestamp
-    updateConversationTimestamp();
-    
-    renderConversation();
-  });
-}
-
-/** Function to add a data listener **/
-startListening = function() {
-  messagesDbRef.on('child_added', function(snapshot) {
-    var chatItem = snapshot.val();
-    
-    if ( chatItem.from == 'Designer' )
-      renderDesignerMsg(chatItem.msg, chatItem.timestamp)
-    else
-      renderDeveloperMsg(chatItem.msg, chatItem.timestamp)
-
-    if(newMessage){
-      messagesPerConversation++;
-      updateConversationMessageCount();
-      conversationTimestamp = chatItem.timestamp;
-      updateConversationTimestamp();
-    }
-  });
-
-  messagesAttachmentsDbRef.on('child_added', function(snapshot) {
-    var chatAttachmentItem = snapshot.val();
-    
-    if ( chatAttachmentItem.from == 'Designer' )
-      renderDesignerAttachmentMsg(chatAttachmentItem.fileName, chatAttachmentItem.fileUrl, chatAttachmentItem.timestamp);
-    else
-      renderDeveloperAttachmentMsg(chatAttachmentItem.fileName, chatAttachmentItem.fileUrl, chatAttachmentItem.timestamp);
-
-  });
-}
-
-pushMessage = function(msgText) {
-  if ( !msgText || msgText == '' )
-    return;
-  var fromUser = usernameLabel.text().trim();
-  var toUser = othernameLabel.text().trim();
-  var timestamp = new Date().toString();
-  var timestampFormatted = timestamp.substring(0, timestamp.lastIndexOf(":"))
-
-  messagesDbRef.push({
-    from: fromUser,
-    to: toUser,
-    msg: msgText,
-    timestamp: timestampFormatted
-  });
-
-  textInput.val('');
-}
-
-pushAttachmentMessage = function(fileName, fileUrl) {
-  
-  var fromUser = usernameLabel.text().trim();
-  var toUser = othernameLabel.text().trim();
-  var timestamp = new Date().toString();
-  var timestampFormatted = timestamp.substring(0, timestamp.lastIndexOf(":"))
-
-  messagesAttachmentsDbRef.push({
-    from: fromUser,
-    to: toUser,
-    fileName: fileName,
-    fileUrl: fileUrl,
-    timestamp: timestampFormatted
-  });
-}
-
-uploadFile = function() {
-  // File or Blob named mountains.jpg
-  var file = uploadFileInput[0].files[0];
-  var fileName = file.name
-  // TODO add id, so files with same name doesn't get overriden
-  var filePath = usernameLabel.text().trim() + '/' + file.name;
-  
-  // Upload file and metadata to the object 
-  var uploadTask = messagesAttachmentsRef.child(filePath).put(file);
-
-  // Listen for state changes, errors, and completion of the upload.
-  uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-    function(snapshot) {
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Uploading: Upload is ' + progress + '% done');
-      switch (snapshot.state) {
-        case firebase.storage.TaskState.PAUSED: // or 'paused'
-          console.log('Uploading: Upload is paused');
-          break;
-        case firebase.storage.TaskState.RUNNING: // or 'running'
-          console.log('Uploading: Upload is running');
-          break;
-      }
-    }, function(error) {
-
-    // A full list of error codes is available at
-    // https://firebase.google.com/docs/storage/web/handle-errors
-    switch (error.code) {
-      case 'storage/unauthorized':
-        // User doesn't have permission to access the object
-        console.log("Uploading: User doesn't have permission to access the object");
-        break;
-
-      case 'storage/canceled':
-        // User canceled the upload
-        console.log("Uploading: User canceled the upload");
-        break;
-
-      case 'storage/unknown':
-        // Unknown error occurred, inspect error.serverResponse
-        console.log("Uploading: Unknown error occurred, inspect error.serverResponse");
-        break;
-    }
-  }, function() {
-    console.log("Uploading: completed successfully");
-    
-    var downloadURL = uploadTask.snapshot.downloadURL;
-    var attachmentText = `
-      I uploaded a file named <a href='${downloadURL}' target='_blank'>${fileName}</a>
-    `;
-    pushMessage(attachmentText);
-    pushAttachmentMessage(fileName, downloadURL);
-  });
-}
 
 initChatApp = function() {
   usernameLabel = $('#username');
@@ -196,23 +46,20 @@ initChatApp = function() {
   currentRenderFunction = renderDeveloperMsg;
   otherRenderFunction = renderDesignerMsg;
 
-  postButton.click(pushChatMessage);
-
   switchUsersBtns.click(toggleUser);
+
+  postButton.click(postButtonHandler);
 
   uploadFileAnchor.click(openFileDialog);
 
   uploadFileInput.change(uploadFile);
 }
 
-pushChatMessage = function(e) {
-  e.preventDefault();
-  newMessage = true;
-
-  pushMessage(textInput.val().trim());  
-}
+// -- Event handlers
 
 toggleUser = function() {
+  $("#chat_column").LoadingOverlay("show");
+
   // Switch usernames  
   var tmp = usernameLabel.text().trim();
   usernameLabel.text(othernameLabel.text().trim());
@@ -234,19 +81,84 @@ toggleUser = function() {
   var tmp = currentRenderFunction;
   currentRenderFunction = otherRenderFunction;
   otherRenderFunction = tmp;
+
+  $("#chat_column").LoadingOverlay("hide");  
 }
 
-updateConversationMessageCount = function(){
-  $("#conversations_msgs_count").html(messagesPerConversation);
-}
+postButtonHandler = function(e) {
+  e.preventDefault();
+  
+  var msgText = textInput.val().trim();
+  if ( !msgText || msgText == '' )
+    return;
 
-updateConversationTimestamp = function(){
-  $("#conversation_timestamp").html(conversationTimestamp);
+  newMessage = true;
+  pushChatMessage(msgText);
+  textInput.val('');
 }
 
 openFileDialog = function(e){
   e.preventDefault();
   uploadFileInput.click();
+}
+
+// -- Methods Calling firebaseWrapper
+
+uploadFile = function(){
+  $("#chat_column").LoadingOverlay("show");  
+  var file = uploadFileInput[0].files[0];
+  firebaseWrapper.uploadFileToStorage(file, function(fileName, downloadURL){
+    var attachmentText = `
+      I uploaded a file named <a href='${downloadURL}' target='_blank'>${fileName}</a>
+    `;
+    pushChatMessage(attachmentText);
+    pushAttachmentMessage(fileName, downloadURL);
+    $("#chat_column").LoadingOverlay("hide");
+  });
+}
+
+pushChatMessage = function(msgText) {
+  var fromUser = usernameLabel.text().trim();
+  var toUser = othernameLabel.text().trim();
+  var timestamp = new Date().toString();
+  var timestampFormatted = timestamp.substring(0, timestamp.lastIndexOf(":"))
+
+  firebaseWrapper.pushChatItem({
+    from: fromUser,
+    to: toUser,
+    msg: msgText,
+    timestamp: timestampFormatted
+  });
+}
+
+pushAttachmentMessage = function(fileName, fileUrl) {
+  var fromUser = usernameLabel.text().trim();
+  var toUser = othernameLabel.text().trim();
+  var timestamp = new Date().toString();
+  var timestampFormatted = timestamp.substring(0, timestamp.lastIndexOf(":"))
+
+  firebaseWrapper.pushAttachmentItem({
+    from: fromUser,
+    to: toUser,
+    fileName: fileName,
+    fileUrl: fileUrl,
+    timestamp: timestampFormatted
+  });
+}
+
+// -- Rendering methods
+
+renderChatItem = function(chatItem){
+  if ( chatItem.from == 'Designer' )
+    renderDesignerMsg(chatItem.msg, chatItem.timestamp)
+  else
+    renderDeveloperMsg(chatItem.msg, chatItem.timestamp)
+
+  if(newMessage){
+    messagesPerConversation++;
+    conversationTimestamp = chatItem.timestamp;
+    renderConversationData();
+  }
 }
 
 renderDesignerMsg = function(text, timestamp){
@@ -275,7 +187,14 @@ function renderMsg(className, imgSrc, text, timestamp){
   `;
 
   $("#chat_items_list").append(chatItemHtml);
-  $(".chat_area").animate({ scrollTop: $('.chat_area').prop("scrollHeight")}, 300);
+  $(".chat_area").animate({ scrollTop: $('.chat_area').prop("scrollHeight")}, 50);
+}
+
+renderAttachmentItem = function(chatAttachmentItem){
+  if ( chatAttachmentItem.from == 'Designer' )
+    renderDesignerAttachmentMsg(chatAttachmentItem.fileName, chatAttachmentItem.fileUrl, chatAttachmentItem.timestamp);
+  else
+    renderDeveloperAttachmentMsg(chatAttachmentItem.fileName, chatAttachmentItem.fileUrl, chatAttachmentItem.timestamp);
 }
 
 renderDesignerAttachmentMsg = function(fileName, fileUrl, timestamp){
@@ -309,7 +228,10 @@ function renderAttachment(imgSrc, fileName, fileUrl, timestamp){
   $("#attachment_area").animate({ scrollTop: $('#attachment_area').prop("scrollHeight")}, 300);
 }
 
-function renderConversation(){
+renderConversation = function(messagesCount, lastMessageTimestamp){
+  messagesPerConversation = messagesCount;
+  conversationTimestamp = lastMessageTimestamp;
+
   conversationItemHtml = `
     <li class="left clearfix">
       <span class="chat-img pull-left">
@@ -335,4 +257,17 @@ function renderConversation(){
 
   $("#conversation_list").append(conversationItemHtml);
   $("#conversation_container").animate({ scrollTop: $('#conversation_container').prop("scrollHeight")}, 300);
+}
+
+renderConversationData = function(){
+  renderConversationMessageCount();
+  renderConversationTimestamp();
+}
+
+renderConversationMessageCount = function(){
+  $("#conversations_msgs_count").html(messagesPerConversation);
+}
+
+renderConversationTimestamp = function(){
+  $("#conversation_timestamp").html(conversationTimestamp);
 }
