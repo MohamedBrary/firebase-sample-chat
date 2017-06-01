@@ -22,11 +22,11 @@
     <div class="main_section">
       <div class="container">
         <div class="app-header">
-          <span class="lead">
+          <div class="lead">
             Chat between Designer and Developer of this sample app.
-          </span>
-          <span class="pull-right">
-            <button class="dev-switch-button btn btn-primary disabled">
+          </div>
+          <div class="pull-rights">
+            <button class="dev-switch-button btn btn-default disabled">
               <img alt="Developer Avatar" class="img-circle" src="https://scontent-cai1-1.xx.fbcdn.net/v/t1.0-1/c22.0.48.48/p48x48/13615419_10153592621422793_8368169177989329233_n.jpg?oh=f5ef37717a144053fcdf7e6fbd42ff02&oe=59E439CE"/>
               Chat as Developer
             </button>
@@ -34,7 +34,7 @@
               <img alt="Designer Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
               Chat as Designer
             </button>
-          </span>
+          </div>
         </div>
 
         <div class="chat_container">
@@ -103,54 +103,8 @@
                   </li>
                 </ul>
               </div>
-              <div class="member_list">
-                <ul class="list-unstyled">
-                  <li class="left clearfix">
-                    <span class="chat-img pull-left">
-                      <img alt="User Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
-                    </span>
-                    <div class="chat-body clearfix">
-                      <div class="header_sec">
-                        <strong class="primary-font">
-                          Jack Sparrow
-                        </strong>
-                        <strong class="pull-right">
-                          09:45AM
-                        </strong>
-                      </div>
-                      <div class="contact_sec">
-                        <strong class="primary-font">
-                          (123) 123-456
-                        </strong>
-                        <span class="badge pull-right">
-                          3
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="left clearfix">
-                    <span class="chat-img pull-left">
-                      <img alt="User Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
-                    </span>
-                    <div class="chat-body clearfix">
-                      <div class="header_sec">
-                        <strong class="primary-font">
-                          Jack Sparrow
-                        </strong>
-                        <strong class="pull-right ">
-                          09:45AM
-                        </strong>
-                      </div>
-                      <div class="contact_sec">
-                        <strong class="primary-font">
-                          (123) 123-456
-                        </strong>
-                        <span class="badge pull-right">
-                          3
-                        </span>
-                      </div>
-                    </div>
-                  </li>
+              <div id="conversation_container" class="member_list">
+                <ul id="conversation_list" class="list-unstyled">
                 </ul>
               </div>
             </div>
@@ -208,12 +162,13 @@
                 <div class="clearfix">
                 </div>
                 <div class="chat_bottom">
-                  <a class="pull-left upload_btn" href="#">
+                  <input id="file_input" class="hide" type="file"/>
+                  <a id="file_anchor" class="pull-left upload_btn" href="">
                     <i aria-hidden="true" class="fa fa-cloud-upload">
                     </i>
-                    Add Files
+                    Upload File
                   </a>
-                  <a id="post_button" class="pull-right btn btn-success" href="#">
+                  <a id="post_button" class="pull-right btn btn-success" href="">
                     Send
                   </a>
                 </div>
@@ -226,106 +181,14 @@
           <div class="col-sm-3 chat_sidebar attachment_list">
             <div class="row">
               <div class="dropdown all_conversation">
-                <button aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenu2" type="button">
+                <button >
                   <i aria-hidden="true" class="fa fa-file">
                   </i>
-                  All Attachments
-                  <span class="caret pull-right">
-                  </span>
+                  Chat Attachments                  
                 </button>
-                <ul aria-labelledby="dropdownMenu2" class="dropdown-menu">
-                  <li>
-                    <a href="#">
-                      All Attachments
-                    </a>
-                    <ul class="sub_menu_ list-unstyled">
-                      <li>
-                        <a href="#">
-                          All Conversation
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          Another action
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          Something else here
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          Separated link
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Another action
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Something else here
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Separated link
-                    </a>
-                  </li>
-                </ul>
               </div>
-              <div class="member_list">
-                <ul class="list-unstyled">
-                  <li class="left clearfix">
-                    <span class="chat-img pull-left">
-                      <img alt="User Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
-                    </span>
-                    <div class="chat-body clearfix">
-                      <div class="header_sec">
-                        <strong class="primary-font">
-                          Jack Sparrow
-                        </strong>
-                        <strong class="pull-right">
-                          09:45AM
-                        </strong>
-                      </div>
-                      <div class="contact_sec">
-                        <strong class="primary-font">
-                          (123) 123-456
-                        </strong>
-                        <span class="badge pull-right">
-                          3
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="left clearfix">
-                    <span class="chat-img pull-left">
-                      <img alt="User Avatar" class="img-circle" src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"/>
-                    </span>
-                    <div class="chat-body clearfix">
-                      <div class="header_sec">
-                        <strong class="primary-font">
-                          Jack Sparrow
-                        </strong>
-                        <strong class="pull-right ">
-                          09:45AM
-                        </strong>
-                      </div>
-                      <div class="contact_sec">
-                        <strong class="primary-font">
-                          (123) 123-456
-                        </strong>
-                        <span class="badge pull-right">
-                          3
-                        </span>
-                      </div>
-                    </div>
-                  </li>
+              <div  id="attachment_area" class="member_list">
+                <ul id="attachment_items_list" class="list-unstyled">
                 </ul>
               </div>
             </div>
@@ -335,7 +198,7 @@
         </div>
       </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/4.1.0/firebase.js">
+    <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js">
     </script>
     <script src="firebase_chat.js">
     </script>
