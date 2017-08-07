@@ -1,5 +1,5 @@
 // Global variables TODO: use namespace
-var developerImg = 'https://scontent-cai1-1.xx.fbcdn.net/v/t1.0-1/c22.0.48.48/p48x48/13615419_10153592621422793_8368169177989329233_n.jpg?oh=f5ef37717a144053fcdf7e6fbd42ff02&oe=59E439CE';
+var developerImg = 'https://avatars1.githubusercontent.com/u/2729246?v=4&s=400';
 var designerImg = 'https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg';
 var usernameLabel;
 var othernameLabel;
